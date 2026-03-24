@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SpawnManager : MonoBehaviour
+public class SpawnManager_Exam1 : MonoBehaviour
 {
     public GameObject[] obstaclePrefab;
     public Vector3 spawnPos = new(25, 0, 0);

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerControllerExam02 : MonoBehaviour
 {
     public float jumpForce;
     public float gravityModifier;
@@ -19,9 +19,6 @@ public class PlayerController : MonoBehaviour
     private Animator playerAnim;
     private AudioSource playerAudio;
 
-    private InputAction dashAction;
-    public bool isDashing = false;
-    public int hp = 3; 
 
 
     public bool gameOver = false;
@@ -33,27 +30,19 @@ public class PlayerController : MonoBehaviour
         playerAudio = GetComponent<AudioSource>();
     }
 
-    
+   
     void Start()
     {
         Physics.gravity *= gravityModifier;
-        dashAction = InputSystem.actions.FindAction("Sprint");
+
         jumpAction = InputSystem.actions.FindAction("Jump");
 
         gameOver = false;
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
-        if (dashAction.IsPressed() && !gameOver)
-        {
-            isDashing = true;
-        }
-        else
-        {
-            isDashing = false;
-        }
         if (jumpAction.triggered && jumpCount < 2 && !gameOver)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
@@ -77,25 +66,13 @@ public class PlayerController : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Obstacle"))
         {
-            
-            hp--;
-            Debug.Log("HP: " + hp);
-            explosionParticle.Stop();
-            explosionParticle.Clear();
+            Debug.Log("Game Over!");
+            gameOver = true;
+            playerAnim.SetBool("Death_b", true);
+            playerAnim.SetInteger("DeathType_int", 1);
             explosionParticle.Play();
+            dirtParticle.Stop();
             playerAudio.PlayOneShot(crashSfx);
-
-            Destroy(collision.gameObject);
-
-            if (hp <= 0)
-            {
-                Debug.Log("Game Over!");
-                gameOver = true;
-                playerAnim.SetBool("Death_b", true);
-                playerAnim.SetInteger("DeathType_int", 1);
-            }
-
-
         }
     }
 
